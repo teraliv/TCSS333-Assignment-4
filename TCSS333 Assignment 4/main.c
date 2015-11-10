@@ -117,18 +117,21 @@ void imageDoubleExposure(unsigned char *img1, unsigned char *img2, long size) {
     FILE *doubleExposureFile = fopen("blend.bmp", "wb");
     
     unsigned char *image;
+    unsigned char *p;
+    
     int i;
     
     image = malloc(size);
 
     // copy bmp header data
-    for (i = 0; i < 54; i++) {
-        *(image + i) = *(img1 + i);
+    for (i = 0, p = image; i < 54; i++) {
+        *p++ = *img1++;
     }
+
     
     // copy bmp double exposure data
     for (i = 54; i < size; i++) {
-        *(image + i) = (*(img1 + i)/2) + (*(img2 + i)/2);
+        *p++ = *img1++/2 + *img2++/2;
     }
     
     // write bmp double exposure data to the file
@@ -183,6 +186,7 @@ void imageCheckerBoard(unsigned char *img1, unsigned char *img2, long size) {
             }
         }
     }
+
     
     // write bmp checker board data to the file
     fwrite(image, sizeof(char), size, checkerBoardFile);
